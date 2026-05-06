@@ -160,15 +160,106 @@
 .pr-final .pr-btn-ghost:hover { background: #fff; color: var(--pr-brand); }
 
 
+/* Comparison matrix (collapsed by default) */
+.pr-compare { padding: 56px 0; background: #fff; border-top: 1px solid var(--pr-line); }
+.pr-compare-details { background: transparent; border: 0; }
+.pr-compare-details > summary { list-style: none; cursor: pointer; padding: 0; max-width: 720px; }
+.pr-compare-details > summary::-webkit-details-marker { display: none; }
+.pr-compare-details > summary h2 { margin-top: 6px; margin-bottom: 10px; }
+.pr-compare-details > summary p { color: var(--pr-ink-2); font-size: 1.02rem; margin-bottom: 16px; }
+.pr-disclose-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--pr-brand); color: #fff;
+  font-weight: 700; font-size: .94rem;
+  padding: 11px 20px; border-radius: 8px;
+  transition: background .15s ease, transform .12s ease;
+}
+.pr-compare-details > summary:hover .pr-disclose-cta { background: var(--pr-brand-2); transform: translateY(-1px); }
+.pr-disclose-cta::after { content: "▾"; font-size: .9rem; transition: transform .2s ease; }
+.pr-compare-details[open] .pr-disclose-cta::after { transform: rotate(180deg); }
+.pr-compare-details[open] .pr-disclose-cta { background: var(--pr-ink-2); }
+.pr-compare-body { margin-top: 32px; animation: pr-fade-in .35s ease both; }
+@keyframes pr-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.pr-legend { display: flex; flex-wrap: wrap; gap: 18px; margin-bottom: 18px; font-size: .88rem; color: var(--pr-ink-2); }
+.pr-legend > span { display: inline-flex; align-items: center; gap: 8px; }
+
+.pr-matrix {
+  border: 1px solid var(--pr-line);
+  border-radius: var(--pr-radius);
+  background: var(--pr-card);
+  overflow: hidden;
+  box-shadow: var(--pr-shadow);
+}
+.pr-mx-head, .pr-mx-row {
+  display: grid;
+  grid-template-columns: 2.4fr 1fr 1fr;
+  align-items: center;
+}
+.pr-mx-head {
+  background: var(--pr-brand);
+  color: #fff;
+  padding: 14px 18px;
+  font-weight: 700;
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.pr-mx-head > span:nth-child(2),
+.pr-mx-head > span:nth-child(3),
+.pr-mx-row > *:nth-child(2),
+.pr-mx-row > *:nth-child(3) { text-align: center; }
+.pr-mx-head > span:nth-child(3) { color: var(--pr-accent); }
+
+.pr-mx-group {
+  background: var(--pr-bg-alt);
+  padding: 11px 18px;
+  font-weight: 700;
+  font-size: .78rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--pr-ink);
+  border-top: 1px solid var(--pr-line);
+}
+.pr-mx-row {
+  padding: 13px 18px;
+  border-top: 1px solid var(--pr-line);
+  font-size: .94rem;
+}
+.pr-mx-row:hover { background: rgba(15,44,84,.025); }
+.pr-mx-row .cap { font-weight: 500; color: var(--pr-ink); padding-right: 10px; line-height: 1.35; }
+.pr-mx-row .cap .star { color: var(--pr-accent); font-weight: 800; margin-right: 4px; }
+
+.pr-yes {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 999px;
+  background: var(--pr-success-bg); color: var(--pr-success);
+  font-weight: 700; font-size: .9rem;
+}
+.pr-no { color: var(--pr-muted); font-weight: 700; font-size: 1.15rem; line-height: 1; }
+.pr-mx-text { font-size: .85rem; color: var(--pr-ink-2); display: inline-block; padding: 2px 0; }
+.pr-mx-text.weak  { color: var(--pr-muted); }
+.pr-mx-text.cloud { color: var(--pr-brand); font-weight: 600; }
+.pr-mx-text.win   { color: var(--pr-success); font-weight: 600; }
+.pr-mx-text.warn  { color: var(--pr-accent); font-weight: 600; }
+
+@media (max-width: 720px) {
+  .pr-mx-head, .pr-mx-row { grid-template-columns: 1.5fr 1fr 1fr; padding: 11px 12px; font-size: .85rem; }
+  .pr-mx-row .cap { font-size: .88rem; }
+  .pr-mx-text { font-size: .78rem; }
+}
+
 /* Footer */
 .pr-foot { padding: 28px 0; text-align: center; color: var(--pr-muted); font-size: .85rem; border-top: 1px solid var(--pr-line); background: #fff; }
 
-/* Hide sales toolkit when in customer-facing print mode */
+/* Print mode: open the comparison and hide UI chrome */
 @media print {
   .pr-toggle-bar { display: none !important; }
   .pr-aud { display: block !important; }
   .pr-final { background: #fff; color: var(--pr-ink); }
   .pr-final h2, .pr-final p { color: var(--pr-ink); }
+  .pr-compare-details > summary { display: none; }
+  .pr-compare-body { display: block !important; }
 }
 </style>
 </head>
@@ -425,7 +516,7 @@
       <p>Penny Rounding is one feature. Continuous updates, anywhere-access, and our active roadmap are the rest. Talk to your account manager about migration — most stores are live within a few weeks.</p>
       <div class="pr-hero-cta" style="justify-content:center;">
         <a class="pr-btn pr-btn-primary" href="https://www.resaleworld.com/contact-us/" data-cta="final-migrate" target="_blank" rel="noopener">Talk to migration team →</a>
-        <a class="pr-btn pr-btn-ghost" href="https://www.resaleworld.com/liberty-cloud/" data-cta="final-learn" target="_blank" rel="noopener">Compare Cloud vs. Desktop</a>
+        <a class="pr-btn pr-btn-ghost" href="#compare" data-cta="final-learn" data-action="open-compare">Compare Cloud vs. Desktop</a>
       </div>
     </div>
     <div class="pr-aud" data-aud="new">
@@ -439,6 +530,66 @@
   </div>
 </section>
 
+
+<!-- COMPARISON MATRIX (collapsed by default; opens via the "Compare Cloud vs. Desktop" CTA above) -->
+<section class="pr-compare" id="compare">
+  <div class="pr-wrap">
+    <details class="pr-compare-details" id="compare-details">
+      <summary>
+        <span class="pr-eyebrow">Side-by-side</span>
+        <h2>Liberty Desktop Legacy vs. Liberty Cloud</h2>
+        <p>Your Liberty Desktop license is still doing great work. But every feature Resaleworld has shipped since 2020 lives in Liberty Cloud — and the gap widens with every release.</p>
+        <span class="pr-disclose-cta" id="pr-disclose-label">Show full comparison</span>
+      </summary>
+      <div class="pr-compare-body">
+        <div class="pr-legend">
+          <span><span class="star" style="color:var(--pr-accent); font-weight:800;">★</span> Add-on / upsell opportunity</span>
+          <span><span class="pr-yes">✓</span> Included</span>
+          <span><span class="pr-no">—</span> Not available</span>
+        </div>
+
+        <div class="pr-matrix" role="table" aria-label="Liberty Desktop vs Liberty Cloud comparison">
+          <div class="pr-mx-head" role="row">
+            <span role="columnheader">Capability</span>
+            <span role="columnheader">Liberty Desktop</span>
+            <span role="columnheader">Liberty Cloud</span>
+          </div>
+
+          <div class="pr-mx-group" role="rowheader">Core capabilities (parity)</div>
+          <div class="pr-mx-row" role="row"><span class="cap">Core consignment engine &amp; POS</span><span class="pr-yes" title="Included">✓</span><span class="pr-yes" title="Included">✓</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap">Item Entry, Item Lookup, 100+ Crystal reports</span><span class="pr-yes" title="Included">✓</span><span class="pr-yes" title="Included">✓</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap">500+ price codes &amp; unlimited markdown schedules</span><span class="pr-yes" title="Included">✓</span><span class="pr-yes" title="Included">✓</span></div>
+
+          <div class="pr-mx-group" role="rowheader">Where Cloud pulls ahead</div>
+          <div class="pr-mx-row" role="row"><span class="cap">Works on Mac, iPad, Linux (not just Windows)</span><span class="pr-mx-text weak">Windows only</span><span class="pr-mx-text win">Any device</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap">Automatic software updates</span><span class="pr-mx-text weak">Manual per PC</span><span class="pr-mx-text win">Silent, auto</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap">Automatic nightly backups (off-server)</span><span class="pr-mx-text weak">Your responsibility</span><span class="pr-mx-text win">Included</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap">Work from home / 2nd location / the road</span><span class="pr-mx-text weak">VPN only</span><span class="pr-mx-text win">Native</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap">Multi-store real-time data sharing</span><span class="pr-mx-text weak">Replication</span><span class="pr-mx-text win">Built-in</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap">Location-specific receipts, tax rules, printers</span><span class="pr-no" title="Not available">—</span><span class="pr-mx-text cloud">v6.4+</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap">Unlimited 7-day technical support</span><span class="pr-mx-text weak">Tiered plans</span><span class="pr-mx-text win">Included</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap">On-prem server hardware required</span><span class="pr-mx-text weak">Yes</span><span class="pr-mx-text win">No</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap">Contract length</span><span class="pr-mx-text weak">License</span><span class="pr-mx-text cloud">Month-to-month</span></div>
+
+          <div class="pr-mx-group" role="rowheader">Add-ons &amp; integrations <span style="color:var(--pr-accent); font-weight:800;">★</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap"><span class="star">★</span>ResalePay — integrated payments (credit, ACH, Apple/Google Pay)</span><span class="pr-mx-text weak">Compatible</span><span class="pr-mx-text cloud">Recommended</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap"><span class="star">★</span>ResaleWallet — ACH payouts to consignors</span><span class="pr-mx-text weak">Not available</span><span class="pr-mx-text warn">Cloud exclusive</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap"><span class="star">★</span>AI Pricing Assistant</span><span class="pr-mx-text weak">Not available</span><span class="pr-mx-text warn">Cloud exclusive</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap"><span class="star">★</span>Liberty Kiosk service fee</span><span class="pr-mx-text weak">$20 / mo add-on</span><span class="pr-mx-text win">Included</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap"><span class="star">★</span>Liberty Mobile Network License</span><span class="pr-mx-text weak">$299 license</span><span class="pr-mx-text win">Included</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap"><span class="star">★</span>Shopify Integration</span><span class="pr-mx-text weak">Available</span><span class="pr-mx-text cloud">$99.95 / mo Unlimited</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap"><span class="star">★</span>eBay Integration &amp; Listing Manager</span><span class="pr-mx-text weak">Available</span><span class="pr-mx-text win">Included with Unlimited</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap"><span class="star">★</span>Resale Rewards — loyalty program</span><span class="pr-mx-text">Available</span><span class="pr-mx-text">Available</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap"><span class="star">★</span>QuickBooks Link (Online + Desktop)</span><span class="pr-mx-text">Available</span><span class="pr-mx-text">Available</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap"><span class="star">★</span>Physical Inventory Reconciliation</span><span class="pr-mx-text">Available</span><span class="pr-mx-text">Available</span></div>
+          <div class="pr-mx-row" role="row"><span class="cap"><span class="star">★</span>Consignor Center web portal</span><span class="pr-mx-text weak">Not available</span><span class="pr-mx-text cloud">Included w/ Shopify Unlimited</span></div>
+        </div>
+
+        <p style="margin-top:18px; font-size:.85rem; color:var(--pr-muted);">Have questions about a specific capability? <a href="https://www.resaleworld.com/contact-us/" target="_blank" rel="noopener" data-cta="compare-contact" style="color:var(--pr-brand); font-weight:600;">Talk to our migration team →</a></p>
+      </div>
+    </details>
+  </div>
+</section>
 
 <footer class="pr-foot">
   <div class="pr-wrap">© Resaleworld · Liberty Cloud Penny Rounding explainer · v1.0 · 2026</div>
@@ -546,6 +697,40 @@
   }
   window.addEventListener('scroll', maybePlay, { passive: true });
   maybePlay();
+
+  // ---- Comparison-matrix open trigger ----
+  var compareDetails = document.getElementById('compare-details');
+  var discloseLabel = document.getElementById('pr-disclose-label');
+  function openCompare(source){
+    if(!compareDetails) return;
+    if(!compareDetails.open){
+      compareDetails.open = true;
+      track('penny_rounder_compare_open', { source: source || 'unknown' });
+    }
+    // Smooth-scroll the section into view, accounting for the sticky toggle bar
+    setTimeout(function(){
+      var section = document.getElementById('compare');
+      if(!section) return;
+      var bar = document.querySelector('.pr-toggle-bar');
+      var offset = bar ? bar.offsetHeight + 12 : 0;
+      var top = section.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    }, 60);
+  }
+  // Hook clicks on any element with data-action="open-compare"
+  root.querySelectorAll('[data-action="open-compare"]').forEach(function(el){
+    el.addEventListener('click', function(e){
+      e.preventDefault();
+      openCompare(el.getAttribute('data-cta') || el.id || 'cta');
+    });
+  });
+  // Toggle the disclosure label when manually opened/closed
+  if(compareDetails && discloseLabel){
+    compareDetails.addEventListener('toggle', function(){
+      discloseLabel.firstChild.nodeValue = compareDetails.open ? 'Hide comparison' : 'Show full comparison';
+      if(compareDetails.open){ track('penny_rounder_compare_open', { source: 'disclosure' }); }
+    });
+  }
 
   // ---- Scroll depth ----
   var depths = [50, 75, 100];
